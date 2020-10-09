@@ -1,4 +1,5 @@
-﻿using SmartJson.Util;
+﻿using SmartJson.Configuration;
+using SmartJson.Util;
 using System.Collections;
 using System.IO;
 using System.Linq;
@@ -12,13 +13,21 @@ namespace JsonParser {
     private object serializable;
     private string serialized;
 
+    private int currentLevel = 1;
+
+    private SmartJsonConfigurationOptions options;
+
     #endregion
 
 
     #region - Constructor -
 
     public JsonSerializer() {
+      options = new SmartJsonConfigurationOptions();
+    }
 
+    public JsonSerializer(SmartJsonConfigurationOptions options) {
+      this.options = options ?? new SmartJsonConfigurationOptions();
     }
 
     #endregion
@@ -48,7 +57,7 @@ namespace JsonParser {
     #region - Property Handling -
 
     private void SerializeProperties() {
-      serialized = SpecialCharacters.OpeningCurlyBracket.ToString();
+      serialized = SpecialCharacters.OpeningCurlyBracket.ToString() + Indent();
 
       var type = serializable.GetType();
       var properties = type.GetProperties();
@@ -66,6 +75,8 @@ namespace JsonParser {
         if (i != properties.Length - 1) {
           serialized += SpecialCharacters.Comma;
         }
+
+        serialized += Indent();
       }
     }
 
@@ -82,6 +93,7 @@ namespace JsonParser {
       serialized += text;
       serialized += SpecialCharacters.QuotationMark;
       serialized += SpecialCharacters.Colon;
+      serialized += SpecialCharacters.Space;
     }
 
     private void WriteValue(object value) {
@@ -113,19 +125,25 @@ namespace JsonParser {
     }
 
     private void WriteObject(object value) {
+      IncreaseLevelIfPrettyPrint();
+
       var valueType = value.GetType();
       serialized += SpecialCharacters.OpeningCurlyBracket;
+      serialized += Indent();
 
       var properties = valueType.GetProperties();
 
       IterateProperties(properties, value);
 
+      DecreaseLevelIfPrettyPrint();
       serialized += SpecialCharacters.ClosingCurlyBracket;
     }
 
     private void WriteArray(object value) {
+      IncreaseLevelIfPrettyPrint();
       var array = (value as IEnumerable).Cast<object>();
       serialized += SpecialCharacters.OpeningSquareBracket;
+      serialized += Indent();
 
       for (int i = 0; i < array.Count(); i++) {
         WriteValue(array.ElementAt(i));
@@ -135,7 +153,28 @@ namespace JsonParser {
         }
       }
 
+      DecreaseLevelIfPrettyPrint();
       serialized += SpecialCharacters.ClosingSquareBracket;
+    }
+
+    #endregion
+
+    #region - Pretty Print -
+
+    private void IncreaseLevelIfPrettyPrint() {
+      if (options.PrettyPrint) {
+        currentLevel++;
+      }
+    }
+
+    private void DecreaseLevelIfPrettyPrint() {
+      if (options.PrettyPrint) {
+        currentLevel--;
+      }
+    }
+
+    private string Indent() {
+      return options.PrettyPrint ? EscapeCharacters.Break + EscapeCharacters.Tab.Repeat(currentLevel) : "";
     }
 
     #endregion
