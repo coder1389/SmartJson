@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartJson", ".\SmartJson\SmartJson.csproj", "{BB5041A9-3CF8-421E-A4B6-E54B67DAB03E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartJson.Util", ".\SmartJson.Util\SmartJson.Util.csproj", "{FFBDCB3D-411D-4253-98A2-BE93B29BEAAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartJson", "SmartJson\SmartJson.csproj", "{BB5041A9-3CF8-421E-A4B6-E54B67DAB03E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{BB5041A9-3CF8-421E-A4B6-E54B67DAB03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB5041A9-3CF8-421E-A4B6-E54B67DAB03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB5041A9-3CF8-421E-A4B6-E54B67DAB03E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FFBDCB3D-411D-4253-98A2-BE93B29BEAAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFBDCB3D-411D-4253-98A2-BE93B29BEAAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FFBDCB3D-411D-4253-98A2-BE93B29BEAAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFBDCB3D-411D-4253-98A2-BE93B29BEAAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
