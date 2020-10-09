@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace JsonParser {
   class Program {
@@ -34,9 +33,10 @@ namespace JsonParser {
         }
       };
 
-      var serialized = new JsonSerializer().Serialize(test);
+      var serializer = new JsonSerializer();
+      serializer.Serialize(test);
 
-      Console.WriteLine(serialized);
+      serializer.SerializeToFile(test, @"C:\temp\result.json");
     }
   }
 }

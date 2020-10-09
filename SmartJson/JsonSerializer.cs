@@ -1,5 +1,6 @@
 ﻿using SmartJson.Util;
 using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -13,7 +14,16 @@ namespace JsonParser {
 
     #endregion
 
-    #region - Serialization
+
+    #region - Constructor -
+
+    public JsonSerializer() {
+
+    }
+
+    #endregion
+
+    #region - Serialization -
 
     public string Serialize(object serializable) {
       this.serializable = serializable;
@@ -22,6 +32,20 @@ namespace JsonParser {
 
       return serialized;
     }
+
+    public void SerializeToFile(object serializable, string filePath) {
+      this.serializable = serializable;
+
+      SerializeProperties();
+
+      File.WriteAllText(filePath, serialized);
+    }
+
+    #endregion
+
+    #region - Private Methods - 
+
+    #region - Property Handling -
 
     private void SerializeProperties() {
       serialized = SpecialCharacters.OpeningCurlyBracket.ToString();
@@ -113,6 +137,8 @@ namespace JsonParser {
 
       serialized += SpecialCharacters.ClosingSquareBracket;
     }
+
+    #endregion
 
     #endregion
   }
