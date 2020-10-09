@@ -6,7 +6,8 @@ namespace JsonParser {
       var test = new Test {
         Id = 1,
         Name = "DMA",
-        HasPhone = true
+        HasPhone = true,
+        Nullable = null
       };
 
       var serialized = new JsonSerializer().Serialize(test);

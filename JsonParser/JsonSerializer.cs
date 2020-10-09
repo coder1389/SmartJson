@@ -27,6 +27,12 @@ namespace JsonParser {
       var type = serializable.GetType();
       var properties = type.GetProperties();
 
+      IterateProperties(properties);
+
+      serialized += SpecialCharacters.ClosingCurlyBracket;
+    }
+
+    private void IterateProperties(PropertyInfo[] properties) {
       for (int i = 0; i < properties.Length; i++) {
         var property = properties[i];
         WriteProperty(property);
@@ -35,8 +41,6 @@ namespace JsonParser {
           serialized += SpecialCharacters.Comma;
         }
       }
-
-      serialized += SpecialCharacters.ClosingCurlyBracket;
     }
 
     private void WriteProperty(PropertyInfo property) {
@@ -55,7 +59,7 @@ namespace JsonParser {
     }
 
     private void WriteValue(object value) {
-      var valueType = value.GetType();
+      var valueType = value?.GetType();
 
       if (valueType == typeof(string)) {
         WriteValueWithQuotationMarks(value);
@@ -63,6 +67,10 @@ namespace JsonParser {
         WriteValueWithOutQuotationMarks(value);
       } else if (valueType == typeof(bool)) {
         WriteValueWithOutQuotationMarks(value.ToString().ToLower());
+      } else if (valueType == typeof(object)) {
+        WriteObject(value);
+      } else if (valueType == null) {
+        WriteValueWithOutQuotationMarks("null");
       }
     }
 
@@ -74,6 +82,17 @@ namespace JsonParser {
 
     private void WriteValueWithOutQuotationMarks(object value) {
       serialized += value;
+    }
+
+    private void WriteObject(object value) {
+      var valueType = value.GetType();
+      serialized += SpecialCharacters.OpenCurlyBracket;
+
+      var properties = valueType.GetProperties();
+
+      IterateProperties(properties);
+
+      serialized += SpecialCharacters.ClosingCurlyBracket;
     }
 
     #endregion
