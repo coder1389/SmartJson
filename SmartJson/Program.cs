@@ -26,6 +26,11 @@ namespace JsonParser {
         Names = new List<string> {
           "Pablo",
           "escobar"
+        },
+        Floats = new List<float> {
+          1f,
+          1.3f,
+          17000.2f
         }
       };
 

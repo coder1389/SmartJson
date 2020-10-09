@@ -9,6 +9,7 @@ namespace JsonParser {
     public Test2 Test2 { get; set; }
     public IList<Test2> Test2s { get; set; }
     public IList<string> Names { get; set; }
+    public IList<float> Floats { get; set; }
   }
 
   public class Test2 {
