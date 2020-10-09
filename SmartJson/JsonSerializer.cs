@@ -1,5 +1,6 @@
 ﻿using SmartJson.Util;
 using System.Collections;
+using System.Linq;
 using System.Reflection;
 
 namespace JsonParser {
@@ -66,7 +67,7 @@ namespace JsonParser {
         WriteValueWithQuotationMarks(value);
       } else if (valueType.IsNumeric()) {
         WriteValueWithOutQuotationMarks(value);
-      } else if (valueType != null && valueType is IEnumerable) {
+      } else if (valueType != null && typeof(IEnumerable).IsAssignableFrom(valueType)) {
         WriteArray(value);
       } else if (valueType == typeof(bool)) {
         WriteValueWithOutQuotationMarks(value.ToString().ToLower());
@@ -99,13 +100,16 @@ namespace JsonParser {
     }
 
     private void WriteArray(object value) {
-      var array = value as IEnumerable;
+      var array = (value as IEnumerable).Cast<object>();
       serialized += SpecialCharacters.OpeningSquareBracket;
 
-      foreach (var element in array) {
-        WriteValue(element);
-      }
+      for (int i = 0; i < array.Count(); i++) {
+        WriteValue(array.ElementAt(i));
 
+        if (i != array.Count() - 1) {
+          serialized += SpecialCharacters.Comma;
+        }
+      }
 
       serialized += SpecialCharacters.ClosingSquareBracket;
     }
