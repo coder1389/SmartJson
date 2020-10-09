@@ -74,6 +74,10 @@ namespace JsonParser {
 
         if (i != properties.Length - 1) {
           serialized += SpecialCharacters.Comma;
+        } else {
+          if (parent != null) {
+            DecreaseLevelIfPrettyPrint();
+          }
         }
 
         serialized += Indent();
@@ -153,7 +157,6 @@ namespace JsonParser {
         }
       }
 
-      DecreaseLevelIfPrettyPrint();
       serialized += SpecialCharacters.ClosingSquareBracket;
     }
 
@@ -163,13 +166,13 @@ namespace JsonParser {
 
     private void IncreaseLevelIfPrettyPrint() {
       if (options.PrettyPrint) {
-        currentLevel++;
+        ++currentLevel;
       }
     }
 
     private void DecreaseLevelIfPrettyPrint() {
       if (options.PrettyPrint) {
-        currentLevel--;
+        --currentLevel;
       }
     }
 

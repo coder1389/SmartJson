@@ -1,4 +1,5 @@
 ﻿using SmartJson.Configuration;
+using System;
 using System.Collections.Generic;
 
 namespace JsonParser {
@@ -35,7 +36,7 @@ namespace JsonParser {
       };
 
       var serializer = new JsonSerializer(new SmartJsonConfigurationOptions() { PrettyPrint = true });
-      serializer.Serialize(test);
+      Console.WriteLine(serializer.Serialize(test));
 
       serializer.SerializeToFile(test, @"C:\temp\result.json");
     }
