@@ -1,4 +1,5 @@
 ﻿using SmartJson.Util;
+using System.Collections;
 using System.Reflection;
 
 namespace JsonParser {
@@ -22,7 +23,7 @@ namespace JsonParser {
     }
 
     private void SerializeProperties() {
-      serialized = SpecialCharacters.OpenCurlyBracket.ToString();
+      serialized = SpecialCharacters.OpeningCurlyBracket.ToString();
 
       var type = serializable.GetType();
       var properties = type.GetProperties();
@@ -32,10 +33,10 @@ namespace JsonParser {
       serialized += SpecialCharacters.ClosingCurlyBracket;
     }
 
-    private void IterateProperties(PropertyInfo[] properties) {
+    private void IterateProperties(PropertyInfo[] properties, object parent = null) {
       for (int i = 0; i < properties.Length; i++) {
         var property = properties[i];
-        WriteProperty(property);
+        WriteProperty(property, parent);
 
         if (i != properties.Length - 1) {
           serialized += SpecialCharacters.Comma;
@@ -43,9 +44,9 @@ namespace JsonParser {
       }
     }
 
-    private void WriteProperty(PropertyInfo property) {
+    private void WriteProperty(PropertyInfo property, object parent = null) {
       var name = property.Name;
-      var value = property.GetValue(serializable);
+      var value = property.GetValue(parent ?? serializable);
 
       WriteName(name);
       WriteValue(value);
@@ -65,12 +66,14 @@ namespace JsonParser {
         WriteValueWithQuotationMarks(value);
       } else if (valueType.IsNumeric()) {
         WriteValueWithOutQuotationMarks(value);
+      } else if (valueType != null && valueType is IEnumerable) {
+        WriteArray(value);
       } else if (valueType == typeof(bool)) {
         WriteValueWithOutQuotationMarks(value.ToString().ToLower());
-      } else if (valueType == typeof(object)) {
-        WriteObject(value);
       } else if (valueType == null) {
         WriteValueWithOutQuotationMarks("null");
+      } else {
+        WriteObject(value);
       }
     }
 
@@ -86,13 +89,25 @@ namespace JsonParser {
 
     private void WriteObject(object value) {
       var valueType = value.GetType();
-      serialized += SpecialCharacters.OpenCurlyBracket;
+      serialized += SpecialCharacters.OpeningCurlyBracket;
 
       var properties = valueType.GetProperties();
 
-      IterateProperties(properties);
+      IterateProperties(properties, value);
 
       serialized += SpecialCharacters.ClosingCurlyBracket;
+    }
+
+    private void WriteArray(object value) {
+      var array = value as IEnumerable;
+      serialized += SpecialCharacters.OpeningSquareBracket;
+
+      foreach (var element in array) {
+        WriteValue(element);
+      }
+
+
+      serialized += SpecialCharacters.ClosingSquareBracket;
     }
 
     #endregion
